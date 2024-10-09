@@ -1,0 +1,120 @@
+/* Original Loader Styles */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px); /* Adjust the blur intensity as needed */
+    z-index: 8888;
+    transition: opacity 0.75s, visibility 0.75s;
+    background-color: rgba(0, 123, 255, 0.8); /* Semi-transparent blue background */
+}
+
+.loader--hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader::after {
+    content: "";
+    width: 65px;
+    height: 65px;
+    border: 5px solid gray; /* White border */
+    border-top-color: #007BFF; /* Blue top border */
+    z-index: 9999;
+    border-radius: 50%;
+    animation: loading 0.75s ease infinite;
+}
+
+@keyframes loading {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* Fancy Loader Styles */
+
+/* Gradient Background */
+
+/* Box Shadow */
+.loader {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* White box shadow */
+}
+
+/* Pulse Animation */
+.loader {
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Text Spinner */
+.loader {
+    text-align: center;
+    font-size: 18px;
+    color: #007BFF; /* Blue text */
+}
+
+.loader span {
+    display: inline-block;
+    animation: spinText 1s linear infinite;
+}
+
+@keyframes spinText {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* Add More Fanciness Here */
+
+/* Example: Gradient Text */
+.loader span {
+    background: linear-gradient(45deg, #fff, #fff); /* White to white gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Example: Glowing Border */
+.loader::after {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5);
+}
+
+/* Example: Rotating Background */
+.loader {
+    background-image: linear-gradient(45deg, #fff, #fff, #fff); /* White to white gradient */
+    background-size: 400% 400%;
+    animation: gradientRotation 10s linear infinite;
+}
+
+@keyframes gradientRotation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* You can continue to add more fancy effects as needed. */

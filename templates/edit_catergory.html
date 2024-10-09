@@ -1,0 +1,37 @@
+{% extends 'dashboard_base.html' %}
+{% block body  %}
+
+<div class="card shadow mt-5">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Edit Categ ory</h5>
+        <div class="container-fluid">
+            <form method="POST" name="edit_category">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Category Name</label>
+                            <input type="text" name="categoryname" class="form-control" value="{{cat.categoryname}}">
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Update" class="m-2 px-3 btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if error == "no" %}
+<script>
+    alert('Category has been Updated');
+    window.location=('{% url 'manage_category' %}');
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}
+
+{% endblock %}

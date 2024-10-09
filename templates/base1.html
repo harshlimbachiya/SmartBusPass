@@ -1,0 +1,66 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass Management</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap"
+          rel="stylesheet">
+    
+    <script src="https://kit.fontawesome.com/d8cfbe84b9.js" crossorigin="anonymous"></script> 
+
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+<header>
+    <nav>
+        <div>
+            <a href="#" class="nav-item nav-logo"> Smart Bus Pass</a>
+        </div>
+
+        <ul>
+          
+          <li>
+            <a class="nav-item" href="/contact/">Contact Us</a>
+          </li>
+          
+     
+          <li>
+            <a class="nav-item" href="#">About Us</a>
+          </li>
+          <li>
+          <a class="nav-item" href="#">View Pass</a>
+          </li>
+          
+            <a class="nav-item" href="/login/">Login</a>
+          <li>
+            <a class="nav-item" href="/signup/">Signup</a>
+          </li>
+          <li>
+              <a class="nav-item" href="/purchase_pass/">purchase pass</a>
+          </li>
+    
+        </ul>
+        
+    </nav>
+
+</header>
+
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+{% block body %}
+
+{% endblock body %}
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends "user_base.html" %}
+{% block body %}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Renew Pass or Apply for a New Pass</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary btn-block" id="renew-form"><b>Renew Pass</b></button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary btn-block" id="new-application-form"><b>Purchase new pass</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById("renew-form").addEventListener("click", function() {
+        window.location.href = "/renew/";
+    });
+
+    document.getElementById("new-application-form").addEventListener("click", function() {
+        window.location.href = "/purchase_pass/";
+    });
+</script>
+
+{% endblock body %}
