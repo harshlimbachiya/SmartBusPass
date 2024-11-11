@@ -12,7 +12,7 @@ urlpatterns = [
     path('manage_category/', views.manage_category ,name="manage_category" ),
     path('edit_Category/<int:pid>', views.edit_Category ,name="edit_Category" ),
     path('delete_Category/<int:pid>', views.delete_Category ,name="delete_Category" ),
-    path('add_pass/', views.add_pass ,name="add_pass" ),
+    path('add_pass/', views.AddPass.as_view() ,name="add_pass" ),
     path('manage_pass/', views.manage_pass ,name="manage_pass" ),
     path('edit_pass/<int:pid>', views.edit_pass ,name="edit_pass" ),
     path('delete_pass/<int:pid>', views.delete_pass ,name="delete_pass" ),
@@ -20,6 +20,6 @@ urlpatterns = [
     path('mange_queries/', views.mange_queries ,name="mange_queries" ),
     path('contact/', views.contact ,name="contact" ),
     path('about/', views.about ,name="about" ),
-    path('signup/', views.Signup ,name="signup" ),
+    path('signup/', views.Signup.as_view() ,name="signup" ),
     path('logout/', views.logoutUser ,name="logout" )
 ]

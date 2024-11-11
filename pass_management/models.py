@@ -20,7 +20,7 @@ class Pass(models.Model):
     FromDate = models.DateField(null=True)
     ToDate = models.DateField(null=True)
     Cost = models.CharField(max_length=300, null=True)
-    PasscreationDate = models.DateTimeField(null=True)
+    PasscreationDate = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return self.PassNumber

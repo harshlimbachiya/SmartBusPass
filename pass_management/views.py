@@ -6,6 +6,8 @@ from django.contrib.auth import logout, authenticate, login as user_login
 from django.contrib import messages
 from .models import *
 from datetime import date
+from django.views import View
+from .forms import RegistrationForm, AddPassForm
 
 def index(request):
     return render(request, "index.html")
@@ -13,27 +15,21 @@ def index(request):
 def purchase_pass(request):
     return render(request, "purchase_pass.html")
 
-def Signup(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        if password == confirm_password:
-            if User.objects.filter(username=username).exists():
-                messages.error(request,"Username alredy exists")
-            elif User.objects.filter(email=email).exists():
-                messages.error(request,"Email alredy exists")
-            else:
-                user=User.objects.create_user(username=username,email=email,password=password)
-                user.save()
-                messages.success(request, "User created successfully!")
-                return redirect('login')
+class Signup(View):
+    def get(self,request):
+        form = RegistrationForm()
+        context = {"form":form}
+        return render(request, "signup.html", context)
+    def post(self, request):
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User created successfully.")
+            return redirect('login')
         else:
-            messages.error(request,"Password do not match")    
+            messages.error(request, "Error in creating user.")
+        return render(request, "signup.html")
     
-    return render(request, "signup.html")
-
 
 def login(request):
     if request.method == "POST":
@@ -100,36 +96,20 @@ def edit_Category(request, pid):
             error = "yes"
     return render(request, 'edit_catergory.html', locals())
 
-@login_required(login_url='/login/')
-def add_pass(request):
-    error = ""
-    category1 = Category.objects.all()
-    if request.method == "POST":
-        pn = str(random.randint(10000000, 99999999))
-        fn = request.POST['FullName']
-        cno = request.POST['ContactNumber']
-        email = request.POST['Email']
-        itype = request.POST['IdentityType']
-        icardno = request.POST['IdentityCardno']
-        ct = request.POST['category']
-        source = request.POST['Source']
-        dest = request.POST['Destination']
-        fdate = request.POST['FromDate']
-        todate = request.POST['ToDate']
-        cost = request.POST['Cost']
-
-        category = Category.objects.get(id=ct)
-
-        try:
-            Pass.objects.create(PassNumber=pn, FullName=fn, ContactNumber=cno, Email=email,
-                                IdentityType=itype, IdentityCardno=icardno, category=category, Source=source,
-                                Destination=dest,
-                                FromDate=fdate, ToDate=todate, Cost=cost, PasscreationDate=date.today())
-            error = "no"
-        except:
-            error = "yes"
-
-    return render(request,'add_pass.html')
+class AddPass(View):
+    def get(self, request):
+        form = AddPassForm()
+        category = Category.objects.all()
+        return render(request,'add_pass.html', {"form": form, 'category':category})
+    
+    def post(self, request):
+        form  = AddPassForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Data saved sccessfully.")
+        else:
+            messages.error(request, "error in saving data")
+        return redirect('add_pass')
 
 @login_required(login_url='/login/')
 def delete_Category(request, pid):
@@ -139,44 +119,11 @@ def delete_Category(request, pid):
     cat.delete()
     return redirect('manage_category')
 
-
-@login_required(login_url='/login/')
-def add_pass(request):
-    error = ""
-    category1 = Category.objects.all()
-    if request.method == "POST":
-        pn = str(random.randint(10000000, 99999999))
-        fn = request.POST['FullName']
-        
-        cno = request.POST['ContactNumber']
-        email = request.POST['Email']
-        itype = request.POST['IdentityType']
-        icardno = request.POST['IdentityCardno']
-        ct = request.POST['category']
-        source = request.POST['Source']
-        dest = request.POST['Destination']
-        fdate = request.POST['FromDate']
-        todate = request.POST['ToDate']
-        cost = request.POST['Cost']
-
-        category = Category.objects.get(id=ct)
-
-        try:
-            Pass.objects.create(PassNumber=pn, FullName=fn, ContactNumber=cno, Email=email,
-                                IdentityType=itype, IdentityCardno=icardno, category=category, Source=source,
-                                Destination=dest,
-                                FromDate=fdate, ToDate=todate, Cost=cost, PasscreationDate=date.today())
-            error = "no"
-        except:
-            error = "yes"
-
-
-    return render(request,'add_pass.html',locals())
-
 @login_required(login_url='/login/')
 def manage_pass(request):
     pas = Pass.objects.all()
     return render(request,'manage_pass.html',locals())
+
 def edit_pass(request, pid):
     pas = Pass.objects.get(id=pid)
     category1 = Category.objects.all()
@@ -224,6 +171,7 @@ def edit_pass(request, pid):
         except:
             pass
     return render(request, 'edit_pass.html', locals())
+
 def delete_pass(request, pid):
     if not request.user.is_authenticated:
         return redirect('admin_login')
