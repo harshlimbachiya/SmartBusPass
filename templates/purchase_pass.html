@@ -156,7 +156,7 @@
                 "handler": function (response) {
                     alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
                     // Handle the response and create the pass on backend
-                    alert("Pass is created  successful! Payment ID: " + response.razorpay_payment_id);
+                    alert("Pass is created  successful! Payment ID: " + form.submit());
                     window.location.href = "/"; 
                 },
                 "prefill": {
