@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-fpvhyzmb2*+*--)^hq-t7+e=000i&j6c$#2+)s6(%e9&%vtrw9
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+RAZORPAY_API_KEY = "rzp_test_9KT1VnGZkZcooB"
+RAZORPAY_API_SECRET = "X2jkQlU4TiddqahAzkSFdMb5"
 
 # Application definition
 

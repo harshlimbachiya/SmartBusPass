@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h1>Proceed to Payment</h1>
+    <button id="rzp-button">Pay Now</button>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}", // Enter the Razorpay API Key here
+            "amount": "{{ amount }}", // Amount in paise (e.g., 50000 for ₹500)
+            "currency": "INR",
+            "name": "Smart Bus Pass System",
+            "description": "Pass Purchase Payment",
+            "order_id": "{{ razorpay_order_id }}", // Razorpay Order ID
+            "handler": function (response) {
+                // After successful payment, redirect to the success page
+                window.location.href = "/payment/success/?payment_id=" + response.razorpay_payment_id +
+                                       "&order_id=" + response.razorpay_order_id +
+                                       "&signature=" + response.razorpay_signature;
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp = new Razorpay(options);
+
+        document.getElementById('rzp-button').onclick = function(e) {
+            rzp.open();
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

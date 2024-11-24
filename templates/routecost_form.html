@@ -1,0 +1,62 @@
+{% extends "dashboard_base.html" %}
+
+{% block body %}
+<div class="card shadow">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Add Route Cost</h5>
+        <div class="container-fluid">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Dynamic Source dropdown -->
+                <div class="form-group">
+                    <label for="id_source">Source</label>
+                    <select name="source" id="id_source" class="form-control" required>
+                        <option value="">Select Source</option>
+                        {% for location in source_locations %}
+                            <option value="{{ location.id }}" {% if location.id == form.source.value %}selected{% endif %}>{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dynamic Destination dropdown -->
+                <div class="form-group">
+                    <label for="id_destination">Destination</label>
+                    <select name="destination" id="id_destination" class="form-control" required>
+                        <option value="">Select Destination</option>
+                        {% for location in destination_locations %}
+                            <option value="{{ location.id }}" {% if location.id == form.destination.value %}selected{% endif %}>{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Base Cost Field -->
+                <div class="form-group">
+                    <label for="id_base_cost">Base Cost</label>
+                    <input type="number" name="base_cost" id="id_base_cost" class="form-control" value="{{ form.base_cost.value }}" required step="0.01" min="0" placeholder="Enter base cost">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group text-end">
+                    <button type="submit" class="btn btn-primary m-2 px-4">Submit</button>
+                    <a href="{% url 'routecost_list' %}" class="btn btn-secondary m-2 px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if error == "no" %}
+<script>
+    alert('Your Route Cost has been Added Successfully.');
+    window.location = '{% url 'routecost_list' %}';
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert('{{ error }}Something Went Wrong. Please try again');
+</script>
+{% endif %}
+
+{% endblock body %}

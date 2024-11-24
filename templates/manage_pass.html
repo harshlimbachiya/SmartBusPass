@@ -8,34 +8,55 @@
         <div class="container-fluid mt-5">
             <table id="example" class="table table-striped table-bordered" style="width:100%">
                 <thead>
-                <tr>
-                    <th>S No.</th>
-                    <th>Pass Number</th>
-                    <th>Name</th>
-                    <th>Mobile Number</th>
-                    <th>Email ID</th>
-                    <th>Creation Date</th>
-                    <th>Action</th>
-                </tr>
+                    <tr>
+                        <th>S No.</th>
+                        <th>Pass Number</th>
+                        <th>Name</th>
+                        <th>Mobile Number</th>
+                        <th>Email ID</th>
+                        <th>Identity Type</th>
+                        <th>Identity Card No</th>
+                        <th>Category</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>From Date</th>
+                        <th>To Date</th>
+                        <th>Cost</th>
+                        <th>Creation Date</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  {% for i in pas %}
-                <tr>
-                    <td>{{forloop.counter}}</td>
-                    <td>{{i.PassNumber}}</td>
-                    <td>{{i.FullName}}</td>
-                    <td>{{i.ContactNumber}}</td>
-                    <td>{{i.Email}}</td>
-                    <td>{{i.PasscreationDate}}</td>
-                    <td><a href="{% url 'edit_pass' i.id%}" class="text-primary">Edit</a> 
-                         {% comment %} | <a href="{% url 'view_PassDetails' i.id%}" class="text-primary">View</a> | {% endcomment %}
-                        <a href="{% url 'delete_pass' i.id%}" class="text-danger" onclick="return confirm('Are You Sure?')">Delete</a> 
-                    </td>
-                </tr>
-                  {% endfor %}
+                    {% for pass_item in pas %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ pass_item.PassNumber }}</td>
+                            <td>{{ pass_item.FullName }}</td>
+                            <td>{{ pass_item.ContactNumber }}</td>
+                            <td>{{ pass_item.Email }}</td>
+                            <td>{{ pass_item.IdentityType }}</td>
+                            <td>{{ pass_item.IdentityCardno }}</td>
+                            <td>{{ pass_item.category }}</td>
+                            <td>{{ pass_item.Source }}</td>
+                            <td>{{ pass_item.Destination }}</td>
+                            <td>{{ pass_item.FromDate }}</td>
+                            <td>{{ pass_item.ToDate }}</td>
+                            <td>{{ pass_item.Cost }}</td>
+                            <td>{{ pass_item.PasscreationDate }}</td>
+                            <td>
+                                <a href="{% url 'edit_pass' pass_item.id %}" class="text-primary">Edit</a> 
+                                <a href="{% url 'delete_pass' pass_item.id %}" class="text-danger" onclick="return confirm('Are you sure you want to delete this pass?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="14" class="text-center">No passes available.</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-{% endblock body %}
+
+{% endblock %}

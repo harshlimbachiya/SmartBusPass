@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Pass
+from .models import *
+from .models import Pass, Category, Location
 from django.core.exceptions import ValidationError
 
 class RegistrationForm(forms.ModelForm):
@@ -20,21 +21,57 @@ class RegistrationForm(forms.ModelForm):
 
         return cleaned_data
 
-class AddPassForm(forms.ModelForm):
-    class Meta():
-        model = Pass
-        fields = ['PassNumber', 'FullName', 'ContactNumber', 'Email', 'IdentityCardno', 'IdentityType', 'category', 'Source', 'Destination', 'FromDate', 'ToDate', 'Cost']
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'emailid', 'contact', 'message', 'msgdate', 'isread']
+
+
+class RouteCostForm(forms.ModelForm):
+    class Meta:
+        model = RouteCost
+        fields = ['source', 'destination', 'base_cost']
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = ['name']
         widgets = {
-            'PassNumber': forms.TextInput(attrs={'class': 'form-control'}),
-            'FullName': forms.TextInput(attrs={'class': 'form-control'}),
-            'ContactNumber': forms.TextInput(attrs={'class': 'form-control'}),
-            'Email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'IdentityCardno': forms.TextInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
-            'Source': forms.TextInput(attrs={'class': 'form-control'}),
-            'Destination': forms.TextInput(attrs={'class': 'form-control'}),
-            'FromDate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'ToDate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'Cost': forms.TextInput(attrs={'class': 'form-control'}),
-            'IdentityType': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+class PassForm(forms.ModelForm):
+    class Meta:
+        model = Pass
+        fields = [
+            'PassNumber', 'FullName', 'ContactNumber', 'Email', 'IdentityType', 
+            'IdentityCardno', 'category', 'Source', 'Destination', 
+            'FromDate', 'ToDate', 'Cost'
+        ]
+        widgets = {
+            'PassNumber': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter pass number'}),
+            'FullName': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
+            'ContactNumber': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your contact number'}),
+            'Email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email address'}),
+            'IdentityType': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the type of identity card'}),
+            'IdentityCardno': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your identity card number'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'Source': forms.Select(attrs={'class': 'form-control'}),  # Using Select for ForeignKey
+            'Destination': forms.Select(attrs={'class': 'form-control'}),  # Using Select for ForeignKey
+            'FromDate': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'ToDate': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'Cost': forms.NumberInput(attrs={'class': 'form-control', 'readonly': True}),  # Keep cost read-only
+        }
+
+    # Override the __init__ method to make sure ForeignKey fields load data correctly
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Dynamically set the queryset for 'Source', 'Destination', and 'category' if needed
+        self.fields['Source'].queryset = Location.objects.all()  # All Location objects for Source
+        self.fields['Destination'].queryset = Location.objects.all()  # All Location objects for Destination
+        self.fields['category'].queryset = Category.objects.all()  # All Category objects for category
+
+        # Automatically calculate cost once the form is initialized, if needed
+        if self.instance.pk:  # If the object exists (e.g., editing), set cost
+            self.instance.set_cost()

@@ -1,5 +1,191 @@
 {% extends "user_base.html" %}
+
 {% block body %}
-This Is Purchase Pass
+<div class="card shadow">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Purchase Pass</h5>
+        <div class="container-fluid">
+            <form method="POST" enctype="multipart/form-data" id="purchase-pass-form">
+                {% csrf_token %}
+
+                <!-- Pass Number -->
+                <div class="form-group">
+                    <label for="id_pass_number">Pass Number</label>
+                    <input type="text" name="PassNumber" id="id_pass_number" class="form-control" value="{{ form.PassNumber.value|default:'' }}" placeholder="Pass Number">
+                </div>
+
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="id_full_name">Full Name</label>
+                    <input type="text" name="FullName" id="id_full_name" class="form-control" value="{{ form.FullName.value|default:'' }}" placeholder="Enter full name">
+                </div>
+
+                <!-- Contact Number -->
+                <div class="form-group">
+                    <label for="id_contact_number">Contact Number</label>
+                    <input type="text" name="ContactNumber" id="id_contact_number" class="form-control" value="{{ form.ContactNumber.value|default:'' }}" placeholder="Enter contact number">
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    <input type="email" name="Email" id="id_email" class="form-control" value="{{ form.Email.value|default:'' }}" placeholder="Enter email">
+                </div>
+                
+                <!-- Identity Type (Simple Text) -->
+                <div class="form-group">
+                    <label for="id_identity_type">Identity Type</label>
+                    <input type="text" name="IdentityType" id="id_identity_type" class="form-control" value="{{ form.IdentityType.value|default:'' }}" placeholder="Enter identity type">
+                </div>
+                
+                <!-- Identity Card Number -->
+                <div class="form-group">
+                    <label for="id_identity_cardno">Identity Card Number</label>
+                    <input type="text" name="IdentityCardno" id="id_identity_cardno" class="form-control" value="{{ form.IdentityCardno.value|default:'' }}" placeholder="Enter identity card number">
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label for="id_category">Category</label>
+                    <select name="category" id="id_category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        {% for choice in form.category.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.category.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Source -->
+                <div class="form-group">
+                    <label for="id_source">Source</label>
+                    <select name="Source" id="id_source" class="form-control" required>
+                        <option value="">Select Source</option>
+                        {% for location in source_locations %}
+                            <option value="{{ location.id }}" {% if location.id == form.Source.value %}selected{% endif %}>{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Destination -->
+                <div class="form-group">
+                    <label for="id_destination">Destination</label>
+                    <select name="Destination" id="id_destination" class="form-control" required>
+                        <option value="">Select Destination</option>
+                        {% for location in destination_locations %}
+                            <option value="{{ location.id }}" {% if location.id == form.Destination.value %}selected{% endif %}>{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- From Date -->
+                <div class="form-group">
+                    <label for="id_from_date">From Date</label>
+                    <input type="date" name="FromDate" id="id_from_date" class="form-control" value="{{ form.FromDate.value|default:'' }}" required>
+                </div>
+
+                <!-- To Date -->
+                <div class="form-group">
+                    <label for="id_to_date">To Date</label>
+                    <input type="date" name="ToDate" id="id_to_date" class="form-control" value="{{ form.ToDate.value|default:'' }}" required>
+                </div>
+
+                <!-- Cost (Auto-calculated) -->
+                <div class="form-group">
+                    <label for="id_cost">Cost</label>
+                    <input type="text" name="Cost" id="id_cost" class="form-control" value="{{ form.Cost.value|default:'' }}" readonly placeholder="Calculated Cost">
+                </div>
+
+                <!-- Submit and Cancel Buttons -->
+                <div class="form-group text-end">
+                    <button type="button" id="razorpay-button" class="btn btn-primary m-2 px-4">Pay Now</button>
+                    <a href="/" class="btn btn-secondary m-2 px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sourceSelect = document.getElementById("id_source");
+        const destinationSelect = document.getElementById("id_destination");
+        const categorySelect = document.getElementById("id_category");
+        const costInput = document.getElementById("id_cost");
+        const razorpayButton = document.getElementById("razorpay-button");
+
+        function calculateCost() {
+            const source = sourceSelect.value;
+            const destination = destinationSelect.value;
+            const category = categorySelect.value;
+
+            if (source && destination && category) {
+                // AJAX call or calculation logic to fetch cost
+                fetch(`/get_cost/?source=${source}&destination=${destination}&category=${category}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        costInput.value = data.cost || "0.00";
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching cost:", error);
+                        costInput.value = "Error";
+                    });
+            } else {
+                costInput.value = "";
+            }
+        }
+
+        // Listen for changes in the select inputs to calculate cost
+        sourceSelect.addEventListener("change", calculateCost);
+        destinationSelect.addEventListener("change", calculateCost);
+        categorySelect.addEventListener("change", calculateCost);
+
+        razorpayButton.addEventListener("click", function () {
+            const amount = costInput.value * 100; // Convert to paise (Razorpay accepts amount in paise)
+
+
+            
+            // Trigger Razorpay checkout
+            var options = {
+                "key": "rzp_test_9KT1VnGZkZcooB", // Replace with your Razorpay key
+                "amount": amount, // Amount in paise
+                "currency": "INR",
+                "name": "Smart Bus Pass",
+                "description": "Purchase your bus pass",
+                "image": "/static/logo.png",
+                "handler": function (response) {
+                    alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                    // Handle the response and create the pass on backend
+                    alert("Pass is created  successful! Payment ID: " + response.razorpay_payment_id);
+                    window.location.href = "/"; 
+                },
+                "prefill": {
+                    "name": document.getElementById("id_full_name").value,
+                    "email": document.getElementById("id_email").value,
+                    "contact": document.getElementById("id_contact_number").value
+                },
+                "notes": {
+                    "pass_number": document.getElementById("id_pass_number").value,
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();
+        });
+    });
+</script>
+
+{% if error == "no" %}
+<script>
+    alert('Your Pass has been Added Successfully. Pass Number: {{ pn }}');
+
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again.');
+</script>
+{% endif %}
 
 {% endblock body %}

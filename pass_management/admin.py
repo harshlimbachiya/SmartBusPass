@@ -4,5 +4,8 @@ from pass_management.models import *
 
 
 admin.site.register(Category)
+admin.site.register(Location)
+admin.site.register(RouteCost)
 admin.site.register(Pass)
 admin.site.register(Contact)
+admin.site.register(Payment)

@@ -1,5 +1,47 @@
 {% extends "dashboard_base.html" %}
 
 {% block body %}
-this is read_queries.html
-{% endblock body %}
+
+<div class="content-wrapper">
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Read Queries</h3>
+            </div>
+            <div class="card-body">
+              <table id="queriesTable" class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Created Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for query in queries %}
+                    <tr>
+                      <td>{{ query.id }}</td>
+                      <td>{{ query.subject }}</td>
+                      <td>{{ query.status }}</td>
+                      <td>{{ query.created_at }}</td>
+                      <td>
+                        <a href="/query/{{ query.id }}" class="btn btn-info btn-sm">View</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

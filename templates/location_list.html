@@ -1,0 +1,73 @@
+{% extends "dashboard_base.html" %}
+
+{% block body %}
+<!-- Start of the Page Header -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Locations</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Locations</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- End of the Page Header -->
+
+<!-- Card for managing locations -->
+<div class="card shadow">
+    <div class="card-header">
+        <a href="{% url 'location_add' %}" class="btn btn-primary">Add Location</a>
+    </div>
+    <div class="card-body">
+        <!-- Location List Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Location Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in locations %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ location.name }}</td>
+                            <td>
+                                <a href="{% url 'location_edit' location.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'location_delete' location.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this location?');">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">No locations found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Success or error alerts -->
+{% if error == "no" %}
+<script>
+    alert('Location has been Added Successfully');
+    window.location = '{% url 'location_list' %}';
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}
+
+{% endblock body %}
