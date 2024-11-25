@@ -1,39 +1,48 @@
 {% extends "user_base.html" %}
 {% block body %}
 
+<div class="container mt-5">
+  <div class="row">
+    <!-- Contact Information Section -->
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+      <div class="card p-4 shadow">
+        <h2 class="text-primary text-center">Smart Buss pass management system</h2>
+        <p class="lead text-center mt-3">
+          789 S.G. Highway, Ahmedabad, Gujarat, 380015<br>
+          <strong>Phone:</strong> +91 79 26543210
+        </p>
+        
+      </div>
+    </div>
 
-
-<div class="col-5 text-center d-flex align-items-center justify-content-center">
-    <div class="card-body row">
-  <div class="">
-    <h2>Admin<strong>LTE</strong></h2>
-    <p class="lead mb-5">123 Testing Ave, Testtown, 9876 NA<br>
-      Phone: +1 234 56789012
-    </p>
+    <!-- Contact Form Section -->
+    <div class="col-md-7">
+      <div class="card p-4 shadow">
+        <h3 class="text-primary mb-4">Contact Us</h3>
+        <form>
+          <div class="form-group mb-3">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" id="inputName" class="form-control" placeholder="Enter your name">
+          </div>
+          <div class="form-group mb-3">
+            <label for="inputEmail" class="form-label">E-Mail</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Enter your email">
+          </div>
+          <div class="form-group mb-3">
+            <label for="inputSubject" class="form-label">Subject</label>
+            <input type="text" id="inputSubject" class="form-control" placeholder="Enter the subject">
+          </div>
+          <div class="form-group mb-4">
+            <label for="inputMessage" class="form-label">Message</label>
+            <textarea id="inputMessage" class="form-control" rows="4" placeholder="Type your message"></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary w-100">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
-<div class="col-7">
-  <div class="form-group">
-    <label for="inputName">Name</label>
-    <input type="text" id="inputName" class="form-control">
-  </div>
-  <div class="form-group">
-    <label for="inputEmail">E-Mail</label>
-    <input type="email" id="inputEmail" class="form-control">
-  </div>
-  <div class="form-group">
-    <label for="inputSubject">Subject</label>
-    <input type="text" id="inputSubject" class="form-control">
-  </div>
-  <div class="form-group">
-    <label for="inputMessage">Message</label>
-    <textarea id="inputMessage" class="form-control" rows="4"></textarea>
-  </div>
-  <div class="form-group">
-    <input type="submit" class="btn btn-primary" value="Send message">
-  </div>
-</div>
-</div>
-
 
 {% endblock body %}
