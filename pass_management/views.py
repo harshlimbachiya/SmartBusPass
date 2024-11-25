@@ -77,6 +77,41 @@ def purchase_pass(request):
         'destination_locations': destination_locations
     })
 
+
+# def view_pass(request):
+#     sd = None
+#     pas = None
+#     if request.method == 'POST':
+#         sd = request.POST['searchdata']
+#     try:
+#         pas = Pass.objects.filter(PassNumber=sd)
+#     except:
+#         pas = ""
+#     return render(request, 'pass_enquiry.html', locals())
+from django.db.models import Q  # Import Q for OR conditions
+
+def view_pass(request):
+    sd = None
+    pas = None
+    if request.method == 'POST':
+        sd = request.POST['searchdata']
+        try:
+            # Update to use the correct field name 'ContactNumber'
+            pas = Pass.objects.filter(Q(PassNumber=sd) | Q(ContactNumber=sd))
+        except Exception as e:
+            print(f"Error: {e}")  # Debugging log
+            pas = None
+    return render(request, 'pass_enquiry.html', locals())
+
+
+
+
+
+def PassEnquiryDtls(request,pid):
+    pas = Pass.objects.get(id=pid)
+    return render(request, 'view_PassEnquiryDtls.html', locals())
+
+
 class Signup(View):
     def get(self,request):
         form = RegistrationForm()

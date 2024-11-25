@@ -94,12 +94,14 @@
                     <label for="id_cost">Cost</label>
                     <input type="text" name="Cost" id="id_cost" class="form-control" value="{{ form.Cost.value|default:'' }}" readonly placeholder="Calculated Cost">
                 </div>
-
-                <!-- Submit and Cancel Buttons -->
-                <div class="form-group text-end">
-                    <button type="button" id="razorpay-button" class="btn btn-primary m-2 px-4">Pay Now</button>
-                    <a href="/" class="btn btn-secondary m-2 px-4">Cancel</a>
-                </div>
+               
+                    {% comment %}  id="razorpay-button"    {% endcomment %}
+                    <div class="form-group text-end">
+                        <button type="submit" id="razorpay-button"  class="btn btn-primary m-2 px-4">Pay Now</button>
+                        <a href="/" class="btn btn-secondary m-2 px-4">Cancel</a>
+                      </div>
+                
+                
             </form>
         </div>
     </div>

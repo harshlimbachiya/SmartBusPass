@@ -8,6 +8,8 @@ urlpatterns = [
    
     path('', views.index ,name="home" ),
     path('login/', views.login ,name="login" ),
+    path('viewpass/', views.view_pass, name='pass_Enquiry'),
+    path('view_PassEnquiryDtls/<int:pid>', views.PassEnquiryDtls, name='view_PassEnquiryDtls'),
     path('dashborad/', views.dashborad ,name="dashboard" ),
     path('user_dashboard/', views.user_dashborad ,name="dashboard" ),
     path('purchase_pass/', views.purchase_pass ,name="purchase_pass" ),

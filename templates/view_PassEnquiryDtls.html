@@ -1,0 +1,94 @@
+{% extends 'user_base.html' %}
+{% block main  %}
+
+<div class="card shadow mt-5">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">View Pass Details</h5>
+        <div class="container-fluid mt-5">
+        <div id="exampl">
+            <table class="table table-bordered">
+                <tr align="center">
+                    <td colspan="4" style="font-size:20px;color:green">
+                        Pass ID : {{pas.PassNumber}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Profile</th>
+                    <td colspan="3"><img src="{{pas.ProfileImage.url}}" width="100" height="100"></td>
+                </tr>
+
+                <tr>
+                    <th>Name</th>
+                    <td>{{pas.FullName}}</td>
+
+                    <th>Email</th>
+                    <td>{{pas.Email}}</td>
+                </tr>
+
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{pas.ContactNumber}}</td>
+
+                    <th>Category</th>
+                    <td>{{pas.category.categoryname}}</td>
+                </tr>
+
+                <tr>
+                    <th>Identity Proof</th>
+                    <td>{{pas.IdentityType}}</td>
+
+                    <th>Identity Card No</th>
+                    <td>{{pas.IdentityCardno}}</td>
+                </tr>
+
+                <tr>
+                    <th>Source</th>
+                    <td>{{pas.Source}}</td>
+
+                    <th>Destination</th>
+                    <td>{{pas.Destination}}</td>
+                </tr>
+
+                <tr>
+                    <th>From Date</th>
+                    <td>{{pas.FromDate}}</td>
+
+                    <th>To Date</th>
+                    <td>{{pas.ToDate}}</td>
+                </tr>
+
+                <tr>
+                    <th>Cost</th>
+                    <td>{{pas.Cost}}</td>
+
+                    <th>Pass Creation Date</th>
+                    <td colspan="3">{{pas.PasscreationDate}}</td>
+                </tr>
+
+                <tr>
+                  <td colspan="4" style="text-align:center; cursor:pointer"><i class="fa fa-print fa-2x" aria-hidden="true" OnClick="CallPrint(this.value)"  ></i></td>
+                </tr>
+
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script>
+function CallPrint(strid) {
+var prtContent = document.getElementById("exampl");
+var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+WinPrint.document.write(prtContent.innerHTML);
+WinPrint.document.close();
+WinPrint.focus();
+WinPrint.print();
+WinPrint.close();
+}
+
+</script>
+</div>
+
+{% endblock %}
