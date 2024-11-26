@@ -26,6 +26,7 @@ razorpay_client = razorpay.Client(auth=(RAZORPAY_API_KEY, RAZORPAY_API_SECRET))
 
 
 @login_required(login_url='/login/')
+
 def purchase_pass(request):
     # Get source and destination locations for dropdown
     source_locations = Location.objects.all()
@@ -88,7 +89,7 @@ def purchase_pass(request):
 #     except:
 #         pas = ""
 #     return render(request, 'pass_enquiry.html', locals())
-from django.db.models import Q  # Import Q for OR conditions
+  # Import Q for OR conditions
 
 def view_pass(request):
     sd = None
