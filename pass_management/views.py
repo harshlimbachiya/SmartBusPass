@@ -35,28 +35,26 @@ def purchase_pass(request):
     if request.method == 'POST':
         form = PassForm(request.POST)
         if form.is_valid():
-            pass_obj = form.save(commit=False)  # Don't save to DB yet
-            
-            # Calculate the cost (or fetch from a previously determined logic)
-            cost = request.POST.get("Cost", 0)  # Example: Get the calculated cost
+            pass_obj = form.save(commit=False)  
+            cost = request.POST.get("Cost", 0)  
             try:
-                amount = int(float(cost) * 100)  # Razorpay expects amount in paise (multiply by 100)
+                amount = int(float(cost) * 100)  
 
-                # Create Razorpay order
+                
                 razorpay_order = razorpay_client.order.create({
                     "amount": amount,
                     "currency": "INR",
-                    "payment_capture": "1"  # Auto capture after payment
+                    "payment_capture": "1"  
                 })
 
-                # Store the Razorpay order ID in your model (optional)
+              
                 pass_obj.razorpay_order_id = razorpay_order['id']
-                pass_obj.save()  # Save the pass details to DB
+                pass_obj.save() 
 
-                # Pass Razorpay details to the template for rendering Razorpay checkout
+                
                 context = {
                     'razorpay_order_id': razorpay_order['id'],
-                    'razorpay_key': "RAZORPAY_API_KEY",  # Replace with actual Razorpay key
+                    'razorpay_key': "RAZORPAY_API_KEY", 
                     'amount': amount,
                     'form': form,
                     'source_locations': source_locations,
@@ -171,7 +169,7 @@ def add_category(request):
             error = "no"
         except:
             error = "yes"
-    return render(request, 'add_Category.html', locals())
+    return render(request, 'add_category.html', locals())
 
 @login_required(login_url='/login/')
 def manage_category(request):
