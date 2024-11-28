@@ -15,43 +15,43 @@ from datetime import date
 from django.views import View
 from .forms import *
 from django.conf import settings
+import uuid
 
 
 def index(request):
     return render(request, "index.html")
 
-RAZORPAY_API_KEY = "rzp_test_9KT1VnGZkZcooB"
-RAZORPAY_API_SECRET = "X2jkQlU4TiddqahAzkSFdMb5"
+RAZORPAY_API_KEY = "rzp_test_oKbztVtJStIMct"
+RAZORPAY_API_SECRET = "9YFuh9BHWAG1d5yfMFOpJcqV"
 razorpay_client = razorpay.Client(auth=(RAZORPAY_API_KEY, RAZORPAY_API_SECRET))
 
-
 @login_required(login_url='/login/')
-
 def purchase_pass(request):
     # Get source and destination locations for dropdown
     source_locations = Location.objects.all()
     destination_locations = Location.objects.all()
 
+    # Generate a unique pass number if it's a GET request (form not yet submitted)
+    pass_number = uuid.uuid4().hex[:10].upper()
+
     if request.method == 'POST':
         form = PassForm(request.POST)
         if form.is_valid():
-            pass_obj = form.save(commit=False)  
+            pass_obj = form.save(commit=False)
+            pass_obj.pass_number = pass_number  # Set the generated pass number
             cost = request.POST.get("Cost", 0)  
             try:
                 amount = int(float(cost) * 100)  
 
-                
                 razorpay_order = razorpay_client.order.create({
                     "amount": amount,
                     "currency": "INR",
                     "payment_capture": "1"  
                 })
 
-              
                 pass_obj.razorpay_order_id = razorpay_order['id']
                 pass_obj.save() 
 
-                
                 context = {
                     'razorpay_order_id': razorpay_order['id'],
                     'razorpay_key': "RAZORPAY_API_KEY", 
@@ -59,6 +59,7 @@ def purchase_pass(request):
                     'form': form,
                     'source_locations': source_locations,
                     'destination_locations': destination_locations,
+                    'pass_number': pass_number  # Pass the generated pass number to the template
                 }
                 return render(request, 'purchase_pass.html', context)
 
@@ -73,10 +74,9 @@ def purchase_pass(request):
     return render(request, 'purchase_pass.html', {
         'form': form,
         'source_locations': source_locations,
-        'destination_locations': destination_locations
+        'destination_locations': destination_locations,
+        'pass_number': pass_number  # Pass the generated pass number to the template
     })
-
-
 # def view_pass(request):
 #     sd = None
 #     pas = None

@@ -49,7 +49,7 @@ class PassForm(forms.ModelForm):
             'FromDate', 'ToDate', 'Cost'
         ]
         widgets = {
-            'PassNumber': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter pass number'}),
+            'PassNumber': forms.TextInput(attrs={'class': 'form-control', 'readonly': True, 'placeholder': 'Auto-generated pass number'}),  # Make pass number readonly
             'FullName': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
             'ContactNumber': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your contact number'}),
             'Email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email address'}),
@@ -74,4 +74,16 @@ class PassForm(forms.ModelForm):
 
         # Automatically calculate cost once the form is initialized, if needed
         if self.instance.pk:  # If the object exists (e.g., editing), set cost
-            self.instance.set_cost()
+            self.instance.set_cost()  # If `set_cost` exists on the model
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Optionally add custom validation here
+        from_date = cleaned_data.get('FromDate')
+        to_date = cleaned_data.get('ToDate')
+        
+        if from_date and to_date and from_date > to_date:
+            raise forms.ValidationError('The start date cannot be later than the end date.')
+
+        return cleaned_data
